@@ -20,4 +20,5 @@ class Channel:
     self.last_forward
     self.earned_fees
     self.opener
+    self.connected
     """

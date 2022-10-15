@@ -19,15 +19,19 @@ class ClnClient:
 
         peers = self._run("listpeers")["peers"]
         for p in peers:
+            if p["connected"] == True:
+                uptime = 100
+            else:
+                uptime = 0
             if p["channels"]:
                 for c in p["channels"]:
                     chan = Channel()
                     chan.chan_id = c.get("short_channel_id")
                     chan.active = c["state"] == "CHANNELD_NORMAL"
                     chan.opener = c["opener"]
+                    chan.uptime, chan.lifetime = uptime, uptime
                     chan.local_node_id, chan.remote_node_id = self.local_pubkey, p["id"]
                     chan.channel_point = c["channel_id"]
-                    chan.uptime, chan.lifetime = None, None
                     total_msat = int(c["msatoshi_total"])
                     to_us_msat = int(c["msatoshi_to_us"])
                     chan.capacity, chan.commit_fee = (
